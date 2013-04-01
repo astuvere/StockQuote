@@ -43,7 +43,7 @@
             android:gravity="left"
             android:paddingLeft="5dp"
             android:text="Name"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textStyle="bold" >
             </TextView>
 
@@ -55,7 +55,7 @@
             android:paddingLeft="5sp"
             android:paddingRight="5sp"
             android:text="Chg"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textStyle="bold" >
             </TextView>
             
@@ -67,7 +67,7 @@
             android:paddingLeft="5sp"
             android:paddingRight="5sp"
             android:text="Price"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textStyle="bold" >
             </TextView>        
             
@@ -79,7 +79,7 @@
             android:paddingLeft="5sp"
             android:paddingRight="5sp"
             android:text="Buy"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textStyle="bold" >
             </TextView>     
             
@@ -91,7 +91,7 @@
             android:paddingLeft="5sp"
             android:paddingRight="5sp"
             android:text="Sell"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textStyle="bold" >
             </TextView>  
             
@@ -103,7 +103,7 @@
             android:paddingLeft="5sp"
             android:paddingRight="5sp"
             android:text="Vol"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textStyle="bold" >
             </TextView>              
             

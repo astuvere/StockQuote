@@ -5,5 +5,9 @@
     <string name="action_settings">Settings</string>
     <string name="About">About</string>
     <string name="Refresh">Refresh</string>
+    <string name="Manage">Manage</string>
+    <string name="Index">STI</string>
+    <string name="All">All Stocks</string>
+    <string name='Watchlist1'>&quot;Watchlist 1&quot;</string>
 
 </resources>

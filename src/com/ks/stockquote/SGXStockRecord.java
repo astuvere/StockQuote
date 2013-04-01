@@ -3,7 +3,7 @@ package com.ks.stockquote;
 public class SGXStockRecord {
 	int ID;
 	public String N;
-	String SIP;
+	public String SIP;
 	String NC;
 	public String R;
 	String I;

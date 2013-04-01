@@ -6,11 +6,57 @@
 <!--         android:showAsAction="never" -->
 <!--         android:title="@string/action_settings"/> -->
 
-    <item
-        android:id="@+id/about"
-        android:title="@string/About"/>
+
+    
     <item
         android:id="@+id/refresh"
-        android:title="@string/Refresh"/>
+        android:title="@string/Refresh"
+        android:showAsAction="always"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_menu_refresh"/>
 
+    <item
+        android:id="@+id/manage"
+        android:title="@string/Manage"
+        android:showAsAction="always"
+        android:orderInCategory="200"
+        android:icon="@drawable/ic_menu_manage"/>
+           
+    <item
+        android:id="@+id/about"
+        android:title="@string/About"
+        android:showAsAction="ifRoom"
+        android:orderInCategory="400"
+        android:icon="@drawable/ic_menu_info_details" />
+    
+    <item
+        android:id="@+id/index"
+        android:title="@string/Index"
+        android:showAsAction="ifRoom"
+        android:orderInCategory="500"
+        />
+    
+    <item
+        android:id="@+id/all"
+        android:title="@string/All"
+        android:showAsAction="ifRoom"
+        android:orderInCategory="501"
+        />    
+
+    <item
+        android:id="@+id/watch1"
+        android:title="@string/Watchlist1"
+        android:showAsAction="ifRoom"
+        android:orderInCategory="501"
+        />    
+    
+    
+    
+<!--     <item -->
+<!--         android:id="@+id/close" -->
+<!--         android:title="Close" -->
+<!--         android:showAsAction="always" -->
+<!--         android:orderInCategory="400" -->
+<!--         android:icon="@drawable/ic_menu_close_clear_cancel"/>     -->
+    
 </menu>
