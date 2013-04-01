@@ -3,6 +3,7 @@ package com.ks.stockquote;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,23 +27,35 @@ public class StockArrayAdapter extends ArrayAdapter<SGXStockRecord> {
 
 		View rowView = inflater.inflate(R.layout.stock_record_layout, parent, false);
 
+		SGXStockRecord rec = stockRecords.get(position);
+
 		TextView textView = (TextView) rowView.findViewById(R.id.Name);
-		textView.setText(stockRecords.get(position).N);
-		
+		textView.setText(rec.N);
+
 		textView = (TextView) rowView.findViewById(R.id.label);
-		textView.setText(String.format("%.3f", stockRecords.get(position).C));
-		
+		textView.setText(String.format("%.3f", rec.C));
+
+		if (rec.C > 0) {
+			textView.setTextColor(Color.rgb(34, 139, 34));
+		} else if (rec.C < 0) {
+			textView.setTextColor(Color.rgb(235, 0, 0));
+		}
+
 		textView = (TextView) rowView.findViewById(R.id.label2);
-		textView.setText(String.format("%.3f", stockRecords.get(position).LT));
-		
+		textView.setText(String.format("%.3f", rec.LT));
+
 		textView = (TextView) rowView.findViewById(R.id.label3);
-		textView.setText(stockRecords.get(position).B);
-		
+		textView.setText(rec.B);
+
 		textView = (TextView) rowView.findViewById(R.id.label4);
-		textView.setText(stockRecords.get(position).S);
-		
+		textView.setText(rec.S);
+
 		textView = (TextView) rowView.findViewById(R.id.label5);
-		textView.setText(String.format("%.0f", stockRecords.get(position).VL));
+		textView.setText(String.format("%.0f", rec.VL));
+
+		if (position % 2 == 0) {
+			rowView.setBackgroundColor(Color.rgb(240, 240, 240));
+		}
 
 		return rowView;
 	}
