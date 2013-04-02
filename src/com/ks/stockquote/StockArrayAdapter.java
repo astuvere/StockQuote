@@ -33,6 +33,9 @@ public class StockArrayAdapter extends ArrayAdapter<SGXStockRecord> {
 		textView.setText(rec.N);
 
 		textView = (TextView) rowView.findViewById(R.id.label);
+		textView.setText(String.format("%.3f", rec.LT));
+		
+		textView = (TextView) rowView.findViewById(R.id.label2);
 		textView.setText(String.format("%.3f", rec.C));
 
 		if (rec.C > 0) {
@@ -40,9 +43,6 @@ public class StockArrayAdapter extends ArrayAdapter<SGXStockRecord> {
 		} else if (rec.C < 0) {
 			textView.setTextColor(Color.rgb(235, 0, 0));
 		}
-
-		textView = (TextView) rowView.findViewById(R.id.label2);
-		textView.setText(String.format("%.3f", rec.LT));
 
 		textView = (TextView) rowView.findViewById(R.id.label3);
 		textView.setText(rec.B);

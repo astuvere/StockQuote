@@ -40,6 +40,8 @@ public class MainListActivity extends ListActivity {
 
 	public void getSGXData(Context context, String option) {
 		
+		final String _option = option;
+		
 		progressDialog = ProgressDialog.show(this, "Please wait", "Data is refreshing...", true);
 		progressDialog.setCancelable(true);
 
@@ -60,7 +62,7 @@ public class MainListActivity extends ListActivity {
 
 				try {
 
-					String responseString = Util.executeRequest(Util.RequestMethod.GET, URL_SGX, QuoteOption.ALL_STOCK);
+					String responseString = Util.executeRequest(Util.RequestMethod.GET, URL_SGX, _option);
 
 					// Testing
 //					String responseString = "{}&& {identifier:'ID', label:'As at 28-03-2013 5:04 PM',"
