@@ -7,7 +7,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import com.google.gson.Gson;
+
 public class Util {
+	
+	public static Gson gson = new Gson();
 	
 	public enum RequestMethod {
 		GET, POST

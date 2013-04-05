@@ -17,9 +17,9 @@ public class FileStore implements IStore {
 	}
 
 	@Override
-	public String getKeyValue(String key, String value) {
+	public String getKeyValue(String key) {
 
-		StringBuffer strbuffer = new StringBuffer();
+		StringBuilder strbuffer = new StringBuilder();
 		try {
 
 			FileInputStream fis = context.openFileInput(key);
@@ -33,7 +33,7 @@ public class FileStore implements IStore {
 			Log.e(tag, e.toString());
 		}
 
-		return strbuffer.toString();
+		return strbuffer.toString().trim();
 	}
 
 	@Override

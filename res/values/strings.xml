@@ -9,5 +9,8 @@
     <string name="Index">STI</string>
     <string name="All">All Stocks</string>
     <string name='Watchlist1'>&quot;Watchlist 1&quot;</string>
+    <string name="add_watchlist1">Add to Watchlist 1</string>
+    <string name="add_watchlist2">Add to Watchlist 2</string>
+    <string name="add_watchlist3">Add to Watchlist 3</string>
 
 </resources>

@@ -4,8 +4,8 @@ public class SGXStockRecord {
 	int ID;
 	public String N;
 	public String SIP;
-	String NC;
-	public String R;
+	public String NC; //Stock code
+	public String R;  //Stock status, e.g. CD, CB
 	String I;
 	String M;
 	public float LT;
