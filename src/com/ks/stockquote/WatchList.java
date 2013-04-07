@@ -11,36 +11,39 @@ public class WatchList {
 	// }
 
 	public ArrayList<String> items;
-	
-	public void addToWatchList(String stockCode)
-	{
-		items.add(stockCode);
+
+	public void addToWatchList(String stockCode) {
+		if (!items.contains(stockCode))
+			items.add(stockCode);
 	}
-	
-	public void removeFromWatchList(String stockCode)
-	{
+
+	public void removeFromWatchList(String stockCode) {
 		items.remove(stockCode);
 	}
-	
-	public void loadWatchList(IStore store, String watchListKey)
-	{		
+
+	public void loadWatchList(IStore store, String watchListKey) {
 		WatchList watchList;
 		String watchListString = store.getKeyValue(watchListKey);
 
 		if (!watchListString.equals("")) {
 			watchList = Util.gson.fromJson(watchListString, WatchList.class);
 			this.items = watchList.items;
-		}
-		else
-		{
+		} else {
 			this.items = new ArrayList<String>();
 		}
 	}
-	
-	public void persistWatchList(IStore store, String watchListKey)
-	{
+
+	public void persistWatchList(IStore store, String watchListKey) {
 		String watchListString = Util.gson.toJson(this, WatchList.class);
 		store.setKeyValue(watchListKey, watchListString);
+	}
+
+	public static String getWatchListKey(byte i) {
+		return "W" + String.valueOf(i);
+	}
+
+	public String getWatchListJsonString() {
+		return Util.gson.toJson(this, WatchList.class);
 	}
 
 }

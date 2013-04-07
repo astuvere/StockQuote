@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:width="40sp"
-            android:text="Chg"
+            android:text="Price"
             android:textSize="12sp"
             android:textStyle="bold" >
             </TextView>
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:width="40sp"
-            android:text="Price"
+            android:text="Chg"
             android:textSize="12sp"
             android:textStyle="bold" >
             </TextView>        

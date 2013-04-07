@@ -1,11 +1,21 @@
 package com.ks.stockquote;
 
+import java.util.Comparator;
+
 public class SGXStockRecord {
 	int ID;
 	public String N;
 	public String SIP;
-	public String NC; //Stock code
-	public String R;  //Stock status, e.g. CD, CB
+
+	/**
+	 * Stock code
+	 */
+	public String NC;
+
+	/**
+	 * Stock status, e.g. CD, CB, H
+	 */
+	public String R;
 	String I;
 	String M;
 	public float LT;
@@ -25,5 +35,12 @@ public class SGXStockRecord {
 	float P;
 	String P_;
 	String V_;
+
+	public static Comparator<SGXStockRecord> Comparator = new Comparator<SGXStockRecord>() {
+
+		public int compare(SGXStockRecord a, SGXStockRecord b) {
+			return a.N.compareTo(b.N);
+		}
+	};
 
 }
