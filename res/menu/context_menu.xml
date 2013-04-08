@@ -9,8 +9,8 @@
         android:id="@+id/add_watchlist2"
         android:title="@string/add_watchlist2"/>
 
-    <item
-        android:id="@+id/add_watchlist3"
-        android:title="@string/add_watchlist3"/>
+<!--     <item -->
+<!--         android:id="@+id/add_watchlist3" -->
+<!--         android:title="@string/add_watchlist3"/> -->
 
 </menu>

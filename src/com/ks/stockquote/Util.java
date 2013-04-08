@@ -7,12 +7,16 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import com.google.gson.Gson;
 
 public class Util {
-	
+
 	public static Gson gson = new Gson();
-	
+
 	public enum RequestMethod {
 		GET, POST
 	}
@@ -27,7 +31,8 @@ public class Util {
 			connection.setRequestMethod(method.toString());
 			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
-			//connection.setRequestProperty("Content-Length", "" + Integer.toString(urlParameters.getBytes().length));
+			// connection.setRequestProperty("Content-Length", "" +
+			// Integer.toString(urlParameters.getBytes().length));
 			connection.setRequestProperty("Content-Language", "en-US");
 
 			connection.setUseCaches(false);
@@ -63,5 +68,19 @@ public class Util {
 				connection.disconnect();
 			}
 		}
+	}
+
+	public static boolean hasInternet(Context context) {
+		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+
+		boolean connected = false;
+		if (activeNetwork == null) {
+			connected = false;
+		} else {
+			connected = activeNetwork.isConnectedOrConnecting();
+		}
+
+		return connected;
 	}
 }

@@ -53,7 +53,7 @@ public class StockArrayAdapter extends ArrayAdapter<SGXStockRecord> {
 		textView = (TextView) rowView.findViewById(R.id.label5);
 		textView.setText(String.format("%.0f", rec.VL));
 
-		if (position % 2 == 0) {
+		if (position % 2 == 1) {
 			rowView.setBackgroundColor(Color.rgb(240, 240, 240));
 		}
 

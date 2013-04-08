@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+import org.apache.http.HttpException;
+
 import com.ks.storage.FileStore;
 
 import android.app.ListActivity;
@@ -76,10 +78,11 @@ public class MainListActivity extends ListActivity {
 		super.onDestroy();
 	}
 
+	public String time;
+
 	public void getSGXData(Context context, QuoteOption.SelectionView view, String watchList) {
 
 		final QuoteOption.SelectionView _view = view;
-		
 
 		progressDialog = ProgressDialog.show(this, "Please wait", "Data is refreshing...", true);
 		progressDialog.setCancelable(true);
@@ -113,7 +116,12 @@ public class MainListActivity extends ListActivity {
 						_option = QuoteOption.STI_CONSTITUENT;
 					}
 
-					String responseString =	Util.executeRequest(Util.RequestMethod.GET, URL_SGX, _option);
+					// Check got Internet
+					if (!Util.hasInternet(MainListActivity.this)) {
+						throw new HttpException();
+					}
+
+					String responseString = Util.executeRequest(Util.RequestMethod.GET, URL_SGX, _option);
 
 					// Testing
 //					String responseString = "{}&& {identifier:'ID', label:'As at 28-03-2013 5:04 PM',"
@@ -135,15 +143,21 @@ public class MainListActivity extends ListActivity {
 
 					responseString = responseString.substring(responseString.indexOf("{identifier:"));
 
+					long startTime = System.nanoTime();
 					response = Util.gson.fromJson(responseString, SGXStockResponse.class);
+					long endTime = System.nanoTime();
+					long duration = endTime - startTime;
+
+					time = "Time taken: " + String.valueOf(duration / 1000000);
+					Log.d("JSON Parse", time);
 
 					// Do filter if is watchlist (not sti and not all)
 					if (_view != QuoteOption.SelectionView.STI_CONSTITUENT && _view != QuoteOption.SelectionView.ALL_STOCK) {
 						WatchList wl = watchLists.get(_watchList);
-						
-						if(wl == null)
+
+						if (wl == null)
 							throw new Exception("wl is not found in wl hashmap!");
-						
+
 						ArrayList<SGXStockRecord> records = new ArrayList<SGXStockRecord>(wl.items.size());
 						for (String stockCode : wl.items) {
 							for (SGXStockRecord record : response.items) {
@@ -163,9 +177,17 @@ public class MainListActivity extends ListActivity {
 						@Override
 						public void run() {
 							setListAdapter(new StockArrayAdapter(MainListActivity.this, response.items));
+							Toast.makeText(MainListActivity.this, time, Toast.LENGTH_LONG).show();
 						}
 					});
 
+				} catch (HttpException e) {
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(MainListActivity.this, getString(R.string.No_internet_connection), Toast.LENGTH_LONG).show();
+						}
+					});
 				} catch (Exception e) {
 					Log.e("Error in getSGXData", e.toString());
 				} finally {
@@ -203,13 +225,10 @@ public class MainListActivity extends ListActivity {
 			getSGXData(this, CurrentOption, null);
 			return true;
 		case R.id.watch1:
-
 			CurrentOption = QuoteOption.SelectionView.WATCHLIST1;
 			getSGXData(this, CurrentOption, WatchList.getWatchListKey((byte) 1));
 			return true;
-
 		case R.id.watch2:
-
 			CurrentOption = QuoteOption.SelectionView.WATCHLIST2;
 			getSGXData(this, CurrentOption, WatchList.getWatchListKey((byte) 2));
 			return true;
@@ -249,12 +268,14 @@ public class MainListActivity extends ListActivity {
 
 			inflater.inflate(R.menu.context_menu_watchlist, menu);
 			MenuItem item = menu.findItem(R.id.remove_watchlist);
+			// Not WORKING... to fix
 			item.setTitle(item.getTitle() + "1");
 
 		} else if (CurrentOption == QuoteOption.SelectionView.WATCHLIST2) {
 
 			inflater.inflate(R.menu.context_menu_watchlist, menu);
 			MenuItem item = menu.findItem(R.id.remove_watchlist);
+			// Not WORKING... to fix
 			item.setTitle(item.getTitle() + "2");
 
 		} else {
@@ -265,30 +286,55 @@ public class MainListActivity extends ListActivity {
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 
-		byte stockPositionInList = (byte) info.position;
+		if (item.getItemId() == R.id.remove_allfromwatchlist) {
 
-		String menuTitle = item.getTitle().toString();
+			// Todo for dynamic watchlist count
+			if (CurrentOption == QuoteOption.SelectionView.WATCHLIST1) {
+				WatchList watchList = watchLists.get(WatchList.getWatchListKey((byte) 1));
+				watchList.items.clear();
+			} else if (CurrentOption == QuoteOption.SelectionView.WATCHLIST2) {
+				WatchList watchList = watchLists.get(WatchList.getWatchListKey((byte) 2));
+				watchList.items.clear();
+			}
 
-		// Use the last char of the menu title as the watch list identifier
-		// Todo as will break for watchlists > 9
-		byte watchlistNumber = Byte.valueOf(menuTitle.substring(menuTitle.length() - 1));
+			Log.d("", "Menu remove all selected");
 
-		WatchList watchList = watchLists.get(WatchList.getWatchListKey(watchlistNumber));
+		} else if (item.getItemId() == R.id.remove_watchlist) {
 
-		// Todo for dynamic watchlist count
-		if (CurrentOption == QuoteOption.SelectionView.WATCHLIST1 || CurrentOption == QuoteOption.SelectionView.WATCHLIST2) {
-			watchList.removeFromWatchList(response.items.get((int) stockPositionInList).NC);
-			// Refresh the list after removal
-			getSGXData(this, CurrentOption, WatchList.getWatchListKey(watchlistNumber));
-		} else {
+			int stockPositionInList = info.position;
+
+			if (CurrentOption == QuoteOption.SelectionView.WATCHLIST1) {
+				WatchList watchList = watchLists.get(WatchList.getWatchListKey((byte) 1));
+				watchList.removeFromWatchList(response.items.get((int) stockPositionInList).NC);
+				// Refresh the list after removal
+				getSGXData(this, CurrentOption, WatchList.getWatchListKey((byte) 1));
+
+			} else if (CurrentOption == QuoteOption.SelectionView.WATCHLIST2) {
+				WatchList watchList = watchLists.get(WatchList.getWatchListKey((byte) 2));
+				watchList.removeFromWatchList(response.items.get((int) stockPositionInList).NC);
+				// Refresh the list after removal
+				getSGXData(this, CurrentOption, WatchList.getWatchListKey((byte) 2));
+			}
+
+		} else if (item.getItemId() == R.id.add_watchlist1 || item.getItemId() == R.id.add_watchlist2) {
+
+			int stockPositionInList = info.position;
+
+			String menuTitle = item.getTitle().toString();
+
+			// Use the last char of the menu title as the watch list identifier
+			// Todo as will break for watchlists > 9
+			// Todo for dynamic watchlist count
+			byte watchlistNumber = Byte.valueOf(menuTitle.substring(menuTitle.length() - 1));
+			WatchList watchList = watchLists.get(WatchList.getWatchListKey(watchlistNumber));
+
 			watchList.addToWatchList(response.items.get((int) stockPositionInList).NC);
+
+			Log.d("Menu", "selected menu: " + String.valueOf(stockPositionInList));
+			Log.d("Menu", "wl: " + watchList.getWatchListJsonString());
+
+			Toast.makeText(this, watchList.getWatchListJsonString(), Toast.LENGTH_LONG).show();
 		}
-
-		Log.d("Menu", "selected menu: " + String.valueOf(stockPositionInList));
-		Log.d("Menu", "wl: " + watchList.getWatchListJsonString());
-
-		Toast.makeText(this, watchList.getWatchListJsonString(), Toast.LENGTH_LONG).show();
-
 		return super.onContextItemSelected(item);
 	}
 }
