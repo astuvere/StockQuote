@@ -16,25 +16,24 @@ public class SGXStockRecord {
 	 * Stock status, e.g. CD, CB, H
 	 */
 	public String R;
-	String I;
-	String M;
+	//String I;
+	//String M;
 	public float LT;
 	public float C;
 	float VL;
-	float BV;
+	//float BV;
 	public String B;
 	public String S;
-	float SV;
-	float O;
-	float H;
-	float L;
-	public float V;
-	String SC;
+	//float SV;
+	//float O;
+	//float H;
+	//float L;
+	//public float V;
+	//String SC;
 	float PV;
-	String PTD;
-	float P;
-	String P_;
-	String V_;
+	//float P;
+	//String P_;
+	//String V_;
 
 	public static Comparator<SGXStockRecord> Comparator = new Comparator<SGXStockRecord>() {
 

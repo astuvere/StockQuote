@@ -78,7 +78,7 @@ public class MainListActivity extends ListActivity {
 		super.onDestroy();
 	}
 
-	public String time;
+	public String time = "";
 
 	public void getSGXData(Context context, QuoteOption.SelectionView view, String watchList) {
 
@@ -121,8 +121,14 @@ public class MainListActivity extends ListActivity {
 						throw new HttpException();
 					}
 
+					// Execute http call
+					long startTime = System.nanoTime();
 					String responseString = Util.executeRequest(Util.RequestMethod.GET, URL_SGX, _option);
-
+					long endTime = System.nanoTime();
+					long duration = endTime - startTime;
+					time = "Time taken: " + String.valueOf(duration / 1000000);
+					Log.d("JSON Parse", time);
+					
 					// Testing
 //					String responseString = "{}&& {identifier:'ID', label:'As at 28-03-2013 5:04 PM',"
 //							+ "items:[{ID:0,N:'Capitaland',SIP:'',NC:'C31',R:'CD',I:'NONE',M:'-',LT:3.530,C:-0.030,VL:9305.000,BV:221.000,B:'3.53',S:'3.54',SV:60.000,O:3.580,H:3.590,L:3.530,V:33045075.000,SC:'9',PV:3.560,P:-0.84269658203125,P_:'X',V_:''},"
@@ -143,15 +149,15 @@ public class MainListActivity extends ListActivity {
 
 					responseString = responseString.substring(responseString.indexOf("{identifier:"));
 
-					long startTime = System.nanoTime();
+					// Parse json
+					startTime = System.nanoTime();
 					response = Util.gson.fromJson(responseString, SGXStockResponse.class);
-					long endTime = System.nanoTime();
-					long duration = endTime - startTime;
-
-					time = "Time taken: " + String.valueOf(duration / 1000000);
-					Log.d("JSON Parse", time);
+					endTime = System.nanoTime();
+					duration = endTime - startTime;
+					time += ", " + String.valueOf(duration / 1000000);
 
 					// Do filter if is watchlist (not sti and not all)
+					startTime = System.nanoTime();
 					if (_view != QuoteOption.SelectionView.STI_CONSTITUENT && _view != QuoteOption.SelectionView.ALL_STOCK) {
 						WatchList wl = watchLists.get(_watchList);
 
@@ -171,16 +177,19 @@ public class MainListActivity extends ListActivity {
 						Collections.sort(records, SGXStockRecord.Comparator);
 						response.items = records;
 					}
+					
+					endTime = System.nanoTime();
+					duration = endTime - startTime;
+					time += ", " + String.valueOf(duration / 1000000);
 
 					runOnUiThread(new Runnable() {
-
 						@Override
 						public void run() {
 							setListAdapter(new StockArrayAdapter(MainListActivity.this, response.items));
 							Toast.makeText(MainListActivity.this, time, Toast.LENGTH_LONG).show();
 						}
 					});
-
+					
 				} catch (HttpException e) {
 					runOnUiThread(new Runnable() {
 						@Override
@@ -192,6 +201,7 @@ public class MainListActivity extends ListActivity {
 					Log.e("Error in getSGXData", e.toString());
 				} finally {
 					progressDialog.dismiss();
+					Log.i("Perf", time);
 				}
 			}
 		};
