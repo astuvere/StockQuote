@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="horizontal" >
 
     <TextView
@@ -11,8 +11,9 @@
         android:textSize="12dp"
         android:text="CapMallAsia"
         android:height="30sp"
-        android:paddingLeft="3sp"
-        android:width="100sp" >
+        android:paddingLeft="4sp"
+        android:width="100sp"
+        android:layout_weight="10" >
     </TextView>
     
     <TextView
@@ -22,7 +23,8 @@
         android:gravity="right"
         android:textSize="12dp"
         android:text="-0.03"
-        android:width="40sp" >
+        android:width="40sp"
+        android:layout_weight="4" >
     </TextView>
     
     <TextView
@@ -32,7 +34,8 @@
         android:gravity="right"
         android:textSize="12dp"
         android:text="2.20"
-        android:width="40sp" >
+        android:width="40sp"
+        android:layout_weight="4" >
     </TextView>
     
     <TextView
@@ -42,7 +45,8 @@
         android:gravity="right"
         android:textSize="12dp"
         android:text="2.20"
-        android:width="40sp" >
+        android:width="40sp"
+        android:layout_weight="4" >
     </TextView>
     
     <TextView
@@ -52,17 +56,20 @@
         android:gravity="right"
         android:textSize="12dp"
         android:text="2.21"
-        android:width="40sp" >
+        android:width="40sp"
+        android:layout_weight="4" >
     </TextView>
     
     <TextView
         android:id="@+id/label5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingRight="4sp"
         android:gravity="right"
         android:text="2132000"
         android:textSize="12dp"
-        android:width="50sp" >
+        android:width="50sp"
+        android:layout_weight="5" >
 
     </TextView>     
 

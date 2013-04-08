@@ -1,23 +1,35 @@
 package com.ks.stockquote;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 
-import com.google.gson.Gson;
+import org.apache.http.HttpException;
+
+import com.ks.storage.FileStore;
 
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.ListView;
 import android.widget.Toast;
 
 public class MainListActivity extends ListActivity {
 
 	static final String URL_SGX = "http://www.sgx.com/JsonRead/JsonData";
+	static final byte WATCHLIST_SIZE = 3;
 
-	private ArrayList<SGXStockRecord> records;
+	private static HashMap<String, WatchList> watchLists = new HashMap<String, WatchList>(WATCHLIST_SIZE);
+	private static SGXStockResponse response;
 	private ProgressDialog progressDialog;
 
 	public MainListActivity() {
@@ -30,38 +42,93 @@ public class MainListActivity extends ListActivity {
 
 		setContentView(R.layout.activity_main_list);
 
+		registerForContextMenu(getListView());
+
+		// Init preset watchlist if is empty
+		if (watchLists.isEmpty()) {
+			FileStore store = new FileStore(this);
+			for (byte i = 1; i <= 3; i++) {
+				WatchList wl = new WatchList();
+				wl.loadWatchList(store, WatchList.getWatchListKey(i));
+				watchLists.put(WatchList.getWatchListKey(i), wl);
+			}
+		}
+
+		// Do first fetch onCreate
 		try {
-			getSGXData(this, CurrentOption);
+			getSGXData(this, CurrentOption, null);
 		} catch (Exception ex) {
 			Log.d("Error in onCreate", ex.toString());
-		}		
+		}
 
 	}
 
-	public void getSGXData(Context context, String option) {
-		
+	@Override
+	protected void onDestroy() {
+
+		// Persist to store
+		FileStore store = new FileStore(this);
+		for (byte i = 1; i <= 3; i++) {
+			WatchList wl = watchLists.get(WatchList.getWatchListKey(i));
+			wl.persistWatchList(store, WatchList.getWatchListKey(i));
+		}
+
+		Log.d("", "Destroyed but persisted");
+
+		super.onDestroy();
+	}
+
+	public String time = "";
+
+	public void getSGXData(Context context, QuoteOption.SelectionView view, String watchList) {
+
+		final QuoteOption.SelectionView _view = view;
+
 		progressDialog = ProgressDialog.show(this, "Please wait", "Data is refreshing...", true);
 		progressDialog.setCancelable(true);
 
 		Runnable runnable = new Runnable() {
 
-			// private ArrayList<Map<String, String>> list = new
-			// ArrayList<Map<String, String>>();
-
-			private SGXStockResponse response;
-			// private Context context;
-			//
-			// public Runnable(Context context)
-			// {
-			// this.context = context;
-			// }
 			@Override
 			public void run() {
 
+				String _option;
+				String _watchList = null;
+
 				try {
 
-					String responseString = Util.executeRequest(Util.RequestMethod.GET, URL_SGX, QuoteOption.ALL_STOCK);
+					switch (_view) {
+					case STI_CONSTITUENT:
+						_option = QuoteOption.STI_CONSTITUENT;
+						break;
+					case ALL_STOCK:
+						_option = QuoteOption.ALL_STOCK;
+						break;
+					case WATCHLIST1:
+						_option = QuoteOption.ALL_STOCK;
+						_watchList = WatchList.getWatchListKey((byte) 1);
+						break;
+					case WATCHLIST2:
+						_option = QuoteOption.ALL_STOCK;
+						_watchList = WatchList.getWatchListKey((byte) 2);
+						break;
+					default:
+						_option = QuoteOption.STI_CONSTITUENT;
+					}
 
+					// Check got Internet
+					if (!Util.hasInternet(MainListActivity.this)) {
+						throw new HttpException();
+					}
+
+					// Execute http call
+					long startTime = System.nanoTime();
+					String responseString = Util.executeRequest(Util.RequestMethod.GET, URL_SGX, _option);
+					long endTime = System.nanoTime();
+					long duration = endTime - startTime;
+					time = "Time taken: " + String.valueOf(duration / 1000000);
+					Log.d("JSON Parse", time);
+					
 					// Testing
 //					String responseString = "{}&& {identifier:'ID', label:'As at 28-03-2013 5:04 PM',"
 //							+ "items:[{ID:0,N:'Capitaland',SIP:'',NC:'C31',R:'CD',I:'NONE',M:'-',LT:3.530,C:-0.030,VL:9305.000,BV:221.000,B:'3.53',S:'3.54',SV:60.000,O:3.580,H:3.590,L:3.530,V:33045075.000,SC:'9',PV:3.560,P:-0.84269658203125,P_:'X',V_:''},"
@@ -82,28 +149,66 @@ public class MainListActivity extends ListActivity {
 
 					responseString = responseString.substring(responseString.indexOf("{identifier:"));
 
-					Gson gson = new Gson();
-					SGXStockResponse response = gson.fromJson(responseString, SGXStockResponse.class);
-					records = response.items;
+					// Parse json
+					startTime = System.nanoTime();
+					response = Util.gson.fromJson(responseString, SGXStockResponse.class);
+					endTime = System.nanoTime();
+					duration = endTime - startTime;
+					time += ", " + String.valueOf(duration / 1000000);
+
+					// Do filter if is watchlist (not sti and not all)
+					startTime = System.nanoTime();
+					if (_view != QuoteOption.SelectionView.STI_CONSTITUENT && _view != QuoteOption.SelectionView.ALL_STOCK) {
+						WatchList wl = watchLists.get(_watchList);
+
+						if (wl == null)
+							throw new Exception("wl is not found in wl hashmap!");
+
+						ArrayList<SGXStockRecord> records = new ArrayList<SGXStockRecord>(wl.items.size());
+						for (String stockCode : wl.items) {
+							for (SGXStockRecord record : response.items) {
+								if (stockCode.equals(record.NC)) {
+									records.add(record);
+									break;
+								}
+
+							}
+						}
+						Collections.sort(records, SGXStockRecord.Comparator);
+						response.items = records;
+					}
+					
+					endTime = System.nanoTime();
+					duration = endTime - startTime;
+					time += ", " + String.valueOf(duration / 1000000);
 
 					runOnUiThread(new Runnable() {
-
 						@Override
 						public void run() {
-							setListAdapter(new StockArrayAdapter(MainListActivity.this, records));
+							setListAdapter(new StockArrayAdapter(MainListActivity.this, response.items));
+							Toast.makeText(MainListActivity.this, time, Toast.LENGTH_LONG).show();
 						}
 					});
-
+					
+				} catch (HttpException e) {
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							Toast.makeText(MainListActivity.this, getString(R.string.No_internet_connection), Toast.LENGTH_LONG).show();
+						}
+					});
 				} catch (Exception e) {
 					Log.e("Error in getSGXData", e.toString());
 				} finally {
 					progressDialog.dismiss();
+					Log.i("Perf", time);
 				}
 			}
 		};
 
 		new Thread(runnable).start();
 	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -111,31 +216,135 @@ public class MainListActivity extends ListActivity {
 		return true;
 	}
 
-	public static String CurrentOption = QuoteOption.STI_CONSTITUENT;
+	public static QuoteOption.SelectionView CurrentOption = QuoteOption.SelectionView.STI_CONSTITUENT;
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.about :
-				Toast.makeText(this, "Version 1", Toast.LENGTH_SHORT).show();
-				return true;
-			case R.id.refresh :
-				getSGXData(this, CurrentOption);
-				return true;
-			case R.id.index :
-				CurrentOption = QuoteOption.STI_CONSTITUENT;
-				getSGXData(this, CurrentOption);
-				return true;
-			case R.id.all :
-				CurrentOption = QuoteOption.ALL_STOCK;
-				getSGXData(this, CurrentOption);
-				return true;
-			case R.id.watch1 :
-				// CurrentOption = QuoteOption.WATCHLIST1;
-				// getSGXData(this, CurrentOption);
-				return true;
-			default :
-				return super.onOptionsItemSelected(item);
+		case R.id.about:
+			Toast.makeText(this, "Version 1", Toast.LENGTH_SHORT).show();
+			return true;
+		case R.id.refresh:
+			getSGXData(this, CurrentOption, null);
+			return true;
+		case R.id.index:
+			CurrentOption = QuoteOption.SelectionView.STI_CONSTITUENT;
+			getSGXData(this, CurrentOption, null);
+			return true;
+		case R.id.all:
+			CurrentOption = QuoteOption.SelectionView.ALL_STOCK;
+			getSGXData(this, CurrentOption, null);
+			return true;
+		case R.id.watch1:
+			CurrentOption = QuoteOption.SelectionView.WATCHLIST1;
+			getSGXData(this, CurrentOption, WatchList.getWatchListKey((byte) 1));
+			return true;
+		case R.id.watch2:
+			CurrentOption = QuoteOption.SelectionView.WATCHLIST2;
+			getSGXData(this, CurrentOption, WatchList.getWatchListKey((byte) 2));
+			return true;
+
+		default:
+			return super.onOptionsItemSelected(item);
 		}
 	}
 
+	// private long selectedItemId;
+
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+
+		// SGXStockRecord rec = records.get(position);
+		// FileStore store = new FileStore(this);
+		//
+		// try {
+		// WatchList watchList = new WatchList();
+		//
+		// } catch (Exception ex) {
+		// Log.e("onListItemClick", ex.toString());
+		//
+		// }
+
+		Log.d("Menu", "selected item: " + String.valueOf(id));
+
+		super.onListItemClick(l, v, position, id);
+	}
+
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		MenuInflater inflater = getMenuInflater();
+
+		// Todo for dynamic watchlist count
+		if (CurrentOption == QuoteOption.SelectionView.WATCHLIST1) {
+
+			inflater.inflate(R.menu.context_menu_watchlist, menu);
+			MenuItem item = menu.findItem(R.id.remove_watchlist);
+			// Not WORKING... to fix
+			item.setTitle(item.getTitle() + "1");
+
+		} else if (CurrentOption == QuoteOption.SelectionView.WATCHLIST2) {
+
+			inflater.inflate(R.menu.context_menu_watchlist, menu);
+			MenuItem item = menu.findItem(R.id.remove_watchlist);
+			// Not WORKING... to fix
+			item.setTitle(item.getTitle() + "2");
+
+		} else {
+			inflater.inflate(R.menu.context_menu, menu);
+		}
+	}
+
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+
+		if (item.getItemId() == R.id.remove_allfromwatchlist) {
+
+			// Todo for dynamic watchlist count
+			if (CurrentOption == QuoteOption.SelectionView.WATCHLIST1) {
+				WatchList watchList = watchLists.get(WatchList.getWatchListKey((byte) 1));
+				watchList.items.clear();
+			} else if (CurrentOption == QuoteOption.SelectionView.WATCHLIST2) {
+				WatchList watchList = watchLists.get(WatchList.getWatchListKey((byte) 2));
+				watchList.items.clear();
+			}
+
+			Log.d("", "Menu remove all selected");
+
+		} else if (item.getItemId() == R.id.remove_watchlist) {
+
+			int stockPositionInList = info.position;
+
+			if (CurrentOption == QuoteOption.SelectionView.WATCHLIST1) {
+				WatchList watchList = watchLists.get(WatchList.getWatchListKey((byte) 1));
+				watchList.removeFromWatchList(response.items.get((int) stockPositionInList).NC);
+				// Refresh the list after removal
+				getSGXData(this, CurrentOption, WatchList.getWatchListKey((byte) 1));
+
+			} else if (CurrentOption == QuoteOption.SelectionView.WATCHLIST2) {
+				WatchList watchList = watchLists.get(WatchList.getWatchListKey((byte) 2));
+				watchList.removeFromWatchList(response.items.get((int) stockPositionInList).NC);
+				// Refresh the list after removal
+				getSGXData(this, CurrentOption, WatchList.getWatchListKey((byte) 2));
+			}
+
+		} else if (item.getItemId() == R.id.add_watchlist1 || item.getItemId() == R.id.add_watchlist2) {
+
+			int stockPositionInList = info.position;
+
+			String menuTitle = item.getTitle().toString();
+
+			// Use the last char of the menu title as the watch list identifier
+			// Todo as will break for watchlists > 9
+			// Todo for dynamic watchlist count
+			byte watchlistNumber = Byte.valueOf(menuTitle.substring(menuTitle.length() - 1));
+			WatchList watchList = watchLists.get(WatchList.getWatchListKey(watchlistNumber));
+
+			watchList.addToWatchList(response.items.get((int) stockPositionInList).NC);
+
+			Log.d("Menu", "selected menu: " + String.valueOf(stockPositionInList));
+			Log.d("Menu", "wl: " + watchList.getWatchListJsonString());
+
+			Toast.makeText(this, watchList.getWatchListJsonString(), Toast.LENGTH_LONG).show();
+		}
+		return super.onContextItemSelected(item);
+	}
 }

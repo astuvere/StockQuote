@@ -1,62 +1,60 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-<!--     <item -->
-<!--         android:id="@+id/action_settings" -->
-<!--         android:orderInCategory="100" -->
-<!--         android:showAsAction="never" -->
-<!--         android:title="@string/action_settings"/> -->
+    <!-- <item -->
+    <!-- android:id="@+id/action_settings" -->
+    <!-- android:orderInCategory="100" -->
+    <!-- android:showAsAction="never" -->
+    <!-- android:title="@string/action_settings"/> -->
 
-
-    
     <item
         android:id="@+id/refresh"
-        android:title="@string/Refresh"
-        android:showAsAction="always"
+        android:icon="@drawable/ic_menu_refresh"
         android:orderInCategory="100"
-        android:icon="@drawable/ic_menu_refresh"/>
-
+        android:showAsAction="always"
+        android:title="@string/Refresh"/>
     <item
         android:id="@+id/manage"
-        android:title="@string/Manage"
-        android:showAsAction="always"
+        android:icon="@drawable/ic_menu_manage"
         android:orderInCategory="200"
-        android:icon="@drawable/ic_menu_manage"/>
-           
+        android:showAsAction="always"
+        android:title="@string/Manage"/>
     <item
         android:id="@+id/about"
-        android:title="@string/About"
-        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_menu_info_details"
         android:orderInCategory="400"
-        android:icon="@drawable/ic_menu_info_details" />
-    
+        android:showAsAction="ifRoom"
+        android:title="@string/About"/>
     <item
         android:id="@+id/index"
-        android:title="@string/Index"
-        android:showAsAction="ifRoom"
         android:orderInCategory="500"
-        />
-    
+        android:showAsAction="ifRoom"
+        android:title="@string/Index"/>
     <item
         android:id="@+id/all"
-        android:title="@string/All"
-        android:showAsAction="ifRoom"
         android:orderInCategory="501"
-        />    
-
+        android:showAsAction="ifRoom"
+        android:title="@string/All"/>
     <item
         android:id="@+id/watch1"
-        android:title="@string/Watchlist1"
-        android:showAsAction="ifRoom"
         android:orderInCategory="501"
-        />    
-    
-    
-    
-<!--     <item -->
-<!--         android:id="@+id/close" -->
-<!--         android:title="Close" -->
-<!--         android:showAsAction="always" -->
-<!--         android:orderInCategory="400" -->
-<!--         android:icon="@drawable/ic_menu_close_clear_cancel"/>     -->
-    
+        android:showAsAction="ifRoom"
+        android:title="@string/Watchlist1"/>
+    <item
+        android:id="@+id/watch2"
+        android:orderInCategory="502"
+        android:showAsAction="ifRoom"
+        android:title="@string/Watchlist2"/>    
+    <item
+        android:id="@+id/search"
+        android:orderInCategory="600"
+        android:showAsAction="ifRoom"
+        android:title="@string/Search"/>
+
+    <!-- <item -->
+    <!-- android:id="@+id/close" -->
+    <!-- android:title="Close" -->
+    <!-- android:showAsAction="always" -->
+    <!-- android:orderInCategory="400" -->
+    <!-- android:icon="@drawable/ic_menu_close_clear_cancel"/> -->
+
 </menu>
