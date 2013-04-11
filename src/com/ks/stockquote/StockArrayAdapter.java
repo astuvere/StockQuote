@@ -2,8 +2,12 @@ package com.ks.stockquote;
 
 import java.util.List;
 
+import com.ks.android.HighLightRowDrawable;
+
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +25,7 @@ public class StockArrayAdapter extends ArrayAdapter<SGXStockRecord> {
 		this.context = context;
 	}
 
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -55,6 +60,7 @@ public class StockArrayAdapter extends ArrayAdapter<SGXStockRecord> {
 
 		if (position % 2 == 1) {
 			rowView.setBackgroundColor(Color.rgb(240, 240, 240));
+			//rowView.setBackground(new HighLightRowDrawable(Color.rgb(240, 240, 240)));
 		}
 
 		return rowView;
