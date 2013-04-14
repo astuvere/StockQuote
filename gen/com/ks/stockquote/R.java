@@ -26,25 +26,26 @@ public final class R {
         public static final int ic_menu_info_details=0x7f020002;
         public static final int ic_menu_manage=0x7f020003;
         public static final int ic_menu_refresh=0x7f020004;
+        public static final int ic_menu_search=0x7f020005;
     }
     public static final class id {
         public static final int Name=0x7f08000c;
         public static final int ScrollView01=0x7f080009;
-        public static final int about=0x7f080018;
+        public static final int about=0x7f08001d;
         public static final int add_watchlist1=0x7f080012;
         public static final int add_watchlist2=0x7f080013;
-        public static final int all=0x7f08001a;
-        public static final int index=0x7f080019;
+        public static final int all=0x7f080019;
+        public static final int index=0x7f080018;
         public static final int label=0x7f08000d;
         public static final int label2=0x7f08000e;
         public static final int label3=0x7f08000f;
         public static final int label4=0x7f080010;
         public static final int label5=0x7f080011;
-        public static final int manage=0x7f080017;
+        public static final int manage=0x7f08001c;
         public static final int refresh=0x7f080016;
         public static final int remove_allfromwatchlist=0x7f080015;
         public static final int remove_watchlist=0x7f080014;
-        public static final int search=0x7f08001d;
+        public static final int search=0x7f080017;
         public static final int stockname=0x7f08000b;
         public static final int tableLayout1=0x7f080001;
         public static final int tableLayout2=0x7f08000a;
@@ -56,8 +57,8 @@ public final class R {
         public static final int textView15=0x7f080007;
         public static final int textView16=0x7f080008;
         public static final int topview=0x7f080000;
-        public static final int watch1=0x7f08001b;
-        public static final int watch2=0x7f08001c;
+        public static final int watch1=0x7f08001a;
+        public static final int watch2=0x7f08001b;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;

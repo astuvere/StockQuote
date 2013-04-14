@@ -2,6 +2,8 @@ package com.ks.stockquote;
 
 import java.util.ArrayList;
 
+import com.ks.storage.IStore;
+
 public class SGXStockResponse {
 
 	public String identifier;
@@ -14,6 +16,27 @@ public class SGXStockResponse {
 	public SGXStockResponse()
 	{		
 		label = DEFAULT_LABEL;
+	}
+	
+	public void loadFromStore(IStore store, String key) {
+
+		SGXStockResponse response;
+		String str = store.getKeyValue(key);
+
+		if (!str.equals("")) {
+			response = Util.gson.fromJson(str, this.getClass());
+			this.label = response.label;
+			this.items = response.items;
+		}
+	}
+
+	public void persistToStore(IStore store, String key) {
+		String str = Util.gson.toJson(this, this.getClass());
+		store.setKeyValue(key, str);
+	}
+
+	public String getJsonString() {
+		return Util.gson.toJson(this, this.getClass());
 	}
 
 }

@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 import org.apache.http.HttpException;
 
@@ -53,20 +54,25 @@ public class MainListActivity extends ListActivity implements SearchDialogListen
 		setContentView(R.layout.activity_main_list);
 
 		registerForContextMenu(getListView());
+		
+		FileStore store = new FileStore(this);
 
 		// Init preset watchlist if is empty
-		if (watchLists.isEmpty()) {
-			FileStore store = new FileStore(this);
+		if (watchLists.isEmpty()) {			
 			for (byte i = 1; i <= 3; i++) {
 				WatchList wl = new WatchList();
 				wl.loadWatchList(store, WatchList.getWatchListKey(i));
 				watchLists.put(WatchList.getWatchListKey(i), wl);
 			}
 		}
+		
+		// Load responses from store (if avail)
+		responseSTI.loadFromStore(store, "STI");
+		responseAllStocks.loadFromStore(store, "AllStocks");
 
 		// Do first fetch onCreate
 		try {
-			getSGXData(this, CurrentOption, null, true);
+			getSGXData(this, CurrentOption, null, false);
 		} catch (Exception ex) {
 			Log.d("Error in onCreate", ex.toString());
 		}
@@ -82,6 +88,10 @@ public class MainListActivity extends ListActivity implements SearchDialogListen
 			WatchList wl = watchLists.get(WatchList.getWatchListKey(i));
 			wl.persistWatchList(store, WatchList.getWatchListKey(i));
 		}
+		
+		// Persist responses to store
+		responseSTI.persistToStore(store, "STI");
+		responseAllStocks.persistToStore(store, "AllStocks");
 
 		Log.d("", "Destroyed but persisted");
 
@@ -90,9 +100,10 @@ public class MainListActivity extends ListActivity implements SearchDialogListen
 
 	public String time = "";
 
-	public void getSGXData(Context context, QuoteOption.SelectionView view, String watchList, boolean forceRefresh) {
+	public void getSGXData(Context context, QuoteOption.SelectionView view, String param, boolean forceRefresh) {
 
 		final QuoteOption.SelectionView _view = view;
+		final String _param = param;
 		final boolean _forceRefresh = forceRefresh;
 
 		progressDialog = ProgressDialog.show(this, "", "Data is refreshing...", true);
@@ -104,7 +115,7 @@ public class MainListActivity extends ListActivity implements SearchDialogListen
 			public void run() {
 
 				String _option;
-				String _watchList = null;
+				String _viewParam = null;
 				time = "";
 
 				try {
@@ -122,14 +133,18 @@ public class MainListActivity extends ListActivity implements SearchDialogListen
 						break;
 					case WATCHLIST1:
 						_option = QuoteOption.ALL_STOCK;
-						_watchList = WatchList.getWatchListKey((byte) 1);
+						_viewParam = WatchList.getWatchListKey((byte) 1);
 						response = responseAllStocks;
 						break;
 					case WATCHLIST2:
 						_option = QuoteOption.ALL_STOCK;
-						_watchList = WatchList.getWatchListKey((byte) 2);
+						_viewParam = WatchList.getWatchListKey((byte) 2);
 						response = responseAllStocks;
 						break;
+					case SEARCH:
+						_option = QuoteOption.ALL_STOCK;
+						_viewParam = _param;
+						response = responseAllStocks;
 					default:
 						_option = QuoteOption.ALL_STOCK;
 						response = responseAllStocks;
@@ -237,35 +252,9 @@ public class MainListActivity extends ListActivity implements SearchDialogListen
 						Thread.sleep(500);
 					}
 
-					// Do filter if is watchlist (not sti and not all)
-//					startTime = System.nanoTime();
-					if (_view != SelectionView.STI_CONSTITUENT && _view != SelectionView.ALL_STOCK) {
-						WatchList wl = watchLists.get(_watchList);
 
-						if (wl == null)
-							throw new Exception("wl is not found in wl hashmap!");
-
-						displayRecords = new ArrayList<SGXStockRecord>(wl.items.size());
-						for (String stockCode : wl.items) {
-							for (SGXStockRecord record : response.items) {
-								if (stockCode.equals(record.NC)) {
-									displayRecords.add(record);
-									break;
-								}
-
-							}
-						}
-						Collections.sort(displayRecords, SGXStockRecord.Comparator);
-					}
-					else
-					{
-						displayRecords = response.items;
-					}
+					displayRecords = getFilteredStockList(_view, _viewParam, response.items);
 					
-//					endTime = System.nanoTime();
-//					duration = endTime - startTime;
-//					time += ", " + String.valueOf(duration / 1000000);
-
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
@@ -292,6 +281,52 @@ public class MainListActivity extends ListActivity implements SearchDialogListen
 		};
 
 		new Thread(runnable).start();
+	}
+
+	protected ArrayList<SGXStockRecord> getFilteredStockList(SelectionView _view, String _param, ArrayList<SGXStockRecord> items) throws Exception {
+
+		// Do filter if is watchlist (not sti and not all)
+
+		ArrayList<SGXStockRecord> filteredRecords = null;
+
+		switch (_view) {
+		case STI_CONSTITUENT:
+		case ALL_STOCK:
+			filteredRecords = items;
+			break;
+		case WATCHLIST1:
+		case WATCHLIST2:
+			WatchList wl = watchLists.get(_param);
+
+			if (wl == null)
+				throw new Exception("wl is not found in wl hashmap!");
+
+			filteredRecords = new ArrayList<SGXStockRecord>(wl.items.size());
+			for (String stockCode : wl.items) {
+				for (SGXStockRecord record : items) {
+					if (stockCode.equals(record.NC)) {
+						filteredRecords.add(record);
+						break;
+					}
+
+				}
+			}
+			Collections.sort(filteredRecords, SGXStockRecord.Comparator);
+			break;
+		case SEARCH:
+			String __param = _param.toLowerCase(Locale.US);
+			filteredRecords = new ArrayList<SGXStockRecord>();
+			for (SGXStockRecord record : items) {
+				if (record.N.toLowerCase(Locale.US).startsWith(__param)) {
+					filteredRecords.add(record);
+				}
+			}
+			break;
+		default:
+			filteredRecords = items;
+		}
+
+		return filteredRecords;
 	}
 
 	@Override
@@ -442,9 +477,10 @@ public class MainListActivity extends ListActivity implements SearchDialogListen
 	
     @Override
     public void onDialogPositiveClick(String stockName) {
-        // User touched the dialog's positive button
     	
-    	
+        // User touched the dialog's positive button    	
+		CurrentOption = QuoteOption.SelectionView.SEARCH;
+		getSGXData(this, CurrentOption, stockName, false);
     	
         Log.i("Search stock", stockName);
     }
