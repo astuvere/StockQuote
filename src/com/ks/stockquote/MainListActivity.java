@@ -10,8 +10,10 @@ import java.util.HashMap;
 import org.apache.http.HttpException;
 
 import com.ks.stockquote.QuoteOption.SelectionView;
+import com.ks.stockquote.SearchDialogFragment.SearchDialogListener;
 import com.ks.storage.FileStore;
 
+import android.app.DialogFragment;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -28,7 +30,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class MainListActivity extends ListActivity {
+public class MainListActivity extends ListActivity implements SearchDialogListener {
 
 	static final String URL_SGX = "http://www.sgx.com/JsonRead/JsonData";
 	static final byte WATCHLIST_SIZE = 3;
@@ -325,7 +327,9 @@ public class MainListActivity extends ListActivity {
 			CurrentOption = QuoteOption.SelectionView.WATCHLIST2;
 			getSGXData(this, CurrentOption, WatchList.getWatchListKey((byte) 2), false);
 			return true;
-
+		case R.id.search:
+			showSearchDialog();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -430,4 +434,19 @@ public class MainListActivity extends ListActivity {
 		}
 		return super.onContextItemSelected(item);
 	}
+	
+	public void showSearchDialog() {
+	    DialogFragment newFragment = new SearchDialogFragment();
+	    newFragment.show(getFragmentManager(), "Search");
+	}
+	
+    @Override
+    public void onDialogPositiveClick(String stockName) {
+        // User touched the dialog's positive button
+    	
+    	
+    	
+        Log.i("Search stock", stockName);
+    }
+
 }
