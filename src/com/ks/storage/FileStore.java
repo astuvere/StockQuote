@@ -25,9 +25,11 @@ public class FileStore implements IStore {
 			FileInputStream fis = context.openFileInput(key);
 			byte[] buffer = new byte[1024];
 
-			while (fis.read(buffer) != -1) {
-				strbuffer.append(new String(buffer));
+			int bytesRead;
+			while ((bytesRead = fis.read(buffer)) != -1) {
+				strbuffer.append(new String(buffer, 0, bytesRead));
 			}
+
 			fis.close();
 		} catch (IOException e) {
 			Log.e(tag, e.toString());

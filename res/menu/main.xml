@@ -13,17 +13,11 @@
         android:showAsAction="always"
         android:title="@string/Refresh"/>
     <item
-        android:id="@+id/manage"
-        android:icon="@drawable/ic_menu_manage"
+        android:id="@+id/search"
+        android:icon="@drawable/ic_menu_search"
         android:orderInCategory="200"
-        android:showAsAction="always"
-        android:title="@string/Manage"/>
-    <item
-        android:id="@+id/about"
-        android:icon="@drawable/ic_menu_info_details"
-        android:orderInCategory="400"
         android:showAsAction="ifRoom"
-        android:title="@string/About"/>
+        android:title="@string/Search"/>    
     <item
         android:id="@+id/index"
         android:orderInCategory="500"
@@ -45,10 +39,17 @@
         android:showAsAction="ifRoom"
         android:title="@string/Watchlist2"/>    
     <item
-        android:id="@+id/search"
+        android:id="@+id/manage"
+        android:icon="@drawable/ic_menu_manage"
         android:orderInCategory="600"
         android:showAsAction="ifRoom"
-        android:title="@string/Search"/>
+        android:title="@string/Manage"/>
+    <item
+        android:id="@+id/about"
+        android:icon="@drawable/ic_menu_info_details"
+        android:orderInCategory="800"
+        android:showAsAction="ifRoom"
+        android:title="@string/About"/>    
 
     <!-- <item -->
     <!-- android:id="@+id/close" -->
