@@ -191,7 +191,7 @@ public class MainListActivity extends ListActivity implements SearchDialogListen
 						{
 							// market is closed
 							// check the last refreshed is after market close at 5pm
-							if (refreshed.get(Calendar.HOUR_OF_DAY) >= 17) {
+							if (refreshed.after(Util.getLastCloseTime())) {
 								// No need any refresh as last refresh is after market close
 							}
 							else

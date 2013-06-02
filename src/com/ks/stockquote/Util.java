@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Calendar;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -82,5 +83,26 @@ public class Util {
 		}
 
 		return connected;
+	}
+
+	public static Calendar getLastCloseTime() {
+		
+		Calendar now = Calendar.getInstance();
+		int day = now.get(Calendar.DAY_OF_WEEK);
+		if ((now.get(Calendar.HOUR_OF_DAY) >= 17 && day == Calendar.FRIDAY) || day == Calendar.SATURDAY || day == Calendar.SUNDAY) {
+			now.set(Calendar.HOUR_OF_DAY, 17);
+			now.set(Calendar.DAY_OF_WEEK, 6);
+		} else if (now.get(Calendar.HOUR_OF_DAY) < 9 && day == Calendar.MONDAY) {
+			now.set(Calendar.HOUR_OF_DAY, 17);
+			now.set(Calendar.DAY_OF_WEEK, 6);
+			now.add(Calendar.DAY_OF_WEEK, -7);
+		} else if (now.get(Calendar.HOUR_OF_DAY) >= 17) {
+			now.set(Calendar.HOUR_OF_DAY, 17);
+		} else if (now.get(Calendar.HOUR_OF_DAY) < 9) {		
+			now.set(Calendar.HOUR_OF_DAY, 17);
+			now.add(Calendar.DAY_OF_WEEK, -1);
+		}
+		
+		return now;
 	}
 }
