@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
+
+    <TextView
+        android:id="@+id/DivType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:textSize="11dp"
+        android:text="Dividend"
+        android:height="35sp"
+        android:paddingLeft="4sp"
+        android:layout_weight="4" >
+    </TextView>
+    
+    <TextView
+        android:id="@+id/DivDateXD"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:textSize="11dp"
+        android:text="Ex-Dividend"
+        android:layout_weight="4" >
+    </TextView>
+    
+    <TextView
+        android:id="@+id/DivDatePayable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:textSize="11dp"       
+        android:text="Date Payable"
+        android:layout_weight="4" >
+    </TextView>
+    
+    <TextView
+        android:id="@+id/DivParticulars"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="4sp"
+        android:paddingRight="4sp"
+        android:gravity="right"
+        android:textSize="11dp"
+        android:text="Particulars"
+        android:lines="2"
+        android:layout_weight="10" >
+    </TextView>
+ 
+
+</LinearLayout>

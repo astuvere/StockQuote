@@ -18,8 +18,9 @@ import android.app.DialogFragment;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.text.format.DateFormat;
+//import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -466,7 +467,22 @@ public class MainListActivity extends ListActivity implements SearchDialogListen
 			Log.d("Menu", "wl: " + watchList.getWatchListJsonString());
 
 			Toast.makeText(this, watchList.getWatchListJsonString(), Toast.LENGTH_LONG).show();
+		
+		} else if (item.getItemId() == R.id.dividend_details) {
+			
+			int stockPositionInList = info.position;
+			String selectedStockName = displayRecords.get((int) stockPositionInList).N;
+			
+			//TODO
+			//TODO
+			
+			Intent intent = new Intent(this, DividendActivity.class);
+			intent.putExtra("selectedName", selectedStockName);
+			startActivity(intent);
 		}
+		
+		
+		
 		return super.onContextItemSelected(item);
 	}
 	

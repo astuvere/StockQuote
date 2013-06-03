@@ -29,23 +29,28 @@ public final class R {
         public static final int ic_menu_search=0x7f020005;
     }
     public static final class id {
-        public static final int Name=0x7f08000c;
+        public static final int DivDatePayable=0x7f08000e;
+        public static final int DivDateXD=0x7f08000d;
+        public static final int DivParticulars=0x7f08000f;
+        public static final int DivType=0x7f08000c;
+        public static final int Name=0x7f080010;
         public static final int ScrollView01=0x7f080009;
-        public static final int about=0x7f08001d;
-        public static final int add_watchlist1=0x7f080012;
-        public static final int add_watchlist2=0x7f080013;
-        public static final int all=0x7f080019;
-        public static final int index=0x7f080018;
-        public static final int label=0x7f08000d;
-        public static final int label2=0x7f08000e;
-        public static final int label3=0x7f08000f;
-        public static final int label4=0x7f080010;
-        public static final int label5=0x7f080011;
-        public static final int manage=0x7f08001c;
-        public static final int refresh=0x7f080016;
-        public static final int remove_allfromwatchlist=0x7f080015;
-        public static final int remove_watchlist=0x7f080014;
-        public static final int search=0x7f080017;
+        public static final int about=0x7f080022;
+        public static final int add_watchlist1=0x7f080016;
+        public static final int add_watchlist2=0x7f080017;
+        public static final int all=0x7f08001e;
+        public static final int dividend_details=0x7f080018;
+        public static final int index=0x7f08001d;
+        public static final int label=0x7f080011;
+        public static final int label2=0x7f080012;
+        public static final int label3=0x7f080013;
+        public static final int label4=0x7f080014;
+        public static final int label5=0x7f080015;
+        public static final int manage=0x7f080021;
+        public static final int refresh=0x7f08001b;
+        public static final int remove_allfromwatchlist=0x7f08001a;
+        public static final int remove_watchlist=0x7f080019;
+        public static final int search=0x7f08001c;
         public static final int stockname=0x7f08000b;
         public static final int tableLayout1=0x7f080001;
         public static final int tableLayout2=0x7f08000a;
@@ -57,16 +62,18 @@ public final class R {
         public static final int textView15=0x7f080007;
         public static final int textView16=0x7f080008;
         public static final int topview=0x7f080000;
-        public static final int watch1=0x7f08001a;
-        public static final int watch2=0x7f08001b;
+        public static final int watch1=0x7f08001f;
+        public static final int watch2=0x7f080020;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
         public static final int activity_main_list=0x7f030001;
         public static final int dialog_search=0x7f030002;
-        public static final int portfolio_item=0x7f030003;
-        public static final int portfolio_main=0x7f030004;
-        public static final int stock_record_layout=0x7f030005;
+        public static final int dividend_main_list=0x7f030003;
+        public static final int dividend_record_layout=0x7f030004;
+        public static final int portfolio_item=0x7f030005;
+        public static final int portfolio_main=0x7f030006;
+        public static final int stock_record_layout=0x7f030007;
     }
     public static final class menu {
         public static final int context_menu=0x7f070000;
@@ -76,12 +83,12 @@ public final class R {
     public static final class string {
         public static final int About=0x7f050002;
         public static final int All=0x7f050006;
-        public static final int Cancel=0x7f05000f;
+        public static final int Cancel=0x7f050010;
         public static final int Index=0x7f050005;
         public static final int Manage=0x7f050004;
-        public static final int No_internet_connection=0x7f050011;
+        public static final int No_internet_connection=0x7f050012;
         public static final int Refresh=0x7f050003;
-        public static final int Search=0x7f05000e;
+        public static final int Search=0x7f05000f;
         public static final int Watchlist1=0x7f050007;
         public static final int Watchlist2=0x7f050008;
         public static final int action_settings=0x7f050001;
@@ -89,9 +96,10 @@ public final class R {
         public static final int add_watchlist2=0x7f05000a;
         public static final int add_watchlist3=0x7f05000b;
         public static final int app_name=0x7f050000;
-        public static final int remove_allfromwatchlist=0x7f05000d;
-        public static final int remove_watchlist=0x7f05000c;
-        public static final int stock_name=0x7f050010;
+        public static final int dividend_details=0x7f05000c;
+        public static final int remove_allfromwatchlist=0x7f05000e;
+        public static final int remove_watchlist=0x7f05000d;
+        public static final int stock_name=0x7f050011;
     }
     public static final class style {
         /** 

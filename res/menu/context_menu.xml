@@ -13,4 +13,8 @@
 <!--         android:id="@+id/add_watchlist3" -->
 <!--         android:title="@string/add_watchlist3"/> -->
 
+    <item
+        android:id="@+id/dividend_details"
+        android:title="@string/dividend_details"/>
+
 </menu>

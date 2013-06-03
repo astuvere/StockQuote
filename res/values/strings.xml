@@ -15,6 +15,8 @@
     <string name="add_watchlist1">Add to Watchlist 1</string>
     <string name="add_watchlist2">Add to Watchlist 2</string>
     <string name="add_watchlist3">Add to Watchlist 3</string>
+    <string name="dividend_details">Dividend Details</string>
+    
     
     <string name="remove_watchlist">&quot;Remove from Watchlist &quot;</string>    
     <string name="remove_allfromwatchlist">&quot;Remove all from Watchlist &quot;</string>
