@@ -9,10 +9,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="left"
-        android:textSize="11dp"
+        android:textSize="10dp"
         android:text="Dividend"
         android:height="35sp"
         android:paddingLeft="4sp"
+        android:width="60sp"
         android:layout_weight="4" >
     </TextView>
     
@@ -21,8 +22,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="right"
-        android:textSize="11dp"
+        android:textSize="10dp"
         android:text="Ex-Dividend"
+        android:width="70sp"
         android:layout_weight="4" >
     </TextView>
     
@@ -31,8 +33,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="right"
-        android:textSize="11dp"       
+        android:textSize="10dp"       
         android:text="Date Payable"
+        android:width="70sp"
         android:layout_weight="4" >
     </TextView>
     
@@ -43,9 +46,10 @@
         android:paddingLeft="4sp"
         android:paddingRight="4sp"
         android:gravity="right"
-        android:textSize="11dp"
+        android:textSize="10dp"
         android:text="Particulars"
         android:lines="2"
+        android:maxWidth="110sp"
         android:layout_weight="10" >
     </TextView>
  

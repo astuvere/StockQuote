@@ -60,6 +60,8 @@
             android:id="@+id/textView14"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingRight="4sp"
+            android:gravity="right"
             android:text="Particulars"
             android:textSize="12sp"
             android:textStyle="bold"
