@@ -89,10 +89,10 @@ public class Util {
 		
 		Calendar now = Calendar.getInstance();
 		int day = now.get(Calendar.DAY_OF_WEEK);
-		if ((now.get(Calendar.HOUR_OF_DAY) >= 17 && day == Calendar.FRIDAY) || day == Calendar.SATURDAY || day == Calendar.SUNDAY) {
+		if ((now.get(Calendar.HOUR_OF_DAY) >= 17 && day == Calendar.FRIDAY) || day == Calendar.SATURDAY) {
 			now.set(Calendar.HOUR_OF_DAY, 17);
 			now.set(Calendar.DAY_OF_WEEK, 6);
-		} else if (now.get(Calendar.HOUR_OF_DAY) < 9 && day == Calendar.MONDAY) {
+		} else if ((now.get(Calendar.HOUR_OF_DAY) < 9 && day == Calendar.MONDAY) || day == Calendar.SUNDAY) {
 			now.set(Calendar.HOUR_OF_DAY, 17);
 			now.set(Calendar.DAY_OF_WEEK, 6);
 			now.add(Calendar.DAY_OF_WEEK, -7);
