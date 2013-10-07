@@ -1,5 +1,8 @@
 package com.ks.stockquote;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -19,6 +22,7 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 //import android.text.format.DateFormat;
 import android.util.Log;
@@ -471,17 +475,13 @@ public class MainListActivity extends ListActivity implements SearchDialogListen
 		} else if (item.getItemId() == R.id.dividend_details) {
 			
 			int stockPositionInList = info.position;
-			String selectedStockName = displayRecords.get((int) stockPositionInList).N;
-			
-			//TODO
-			//TODO
+			String selectedStockCode = displayRecords.get((int) stockPositionInList).NC;
+			String selectedStockName = AssetLookupHelper.getStockNameForDividend(this, selectedStockCode);
 			
 			Intent intent = new Intent(this, DividendActivity.class);
 			intent.putExtra("selectedName", selectedStockName);
 			startActivity(intent);
-		}
-		
-		
+		}		
 		
 		return super.onContextItemSelected(item);
 	}
