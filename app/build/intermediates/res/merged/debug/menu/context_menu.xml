@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/add_watchlist1"
+        android:title="@string/add_watchlist1"/>
+
+    <item
+        android:id="@+id/add_watchlist2"
+        android:title="@string/add_watchlist2"/>
+
+<!--     <item -->
+<!--         android:id="@+id/add_watchlist3" -->
+<!--         android:title="@string/add_watchlist3"/> -->
+
+    <item
+        android:id="@+id/dividend_details"
+        android:title="@string/dividend_details"/>
+
+</menu>

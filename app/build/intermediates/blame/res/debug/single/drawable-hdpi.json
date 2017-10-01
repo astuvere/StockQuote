@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "D:\\projects\\StockQuote1\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi\\ic_menu_info_details.png",
+        "source": "D:\\projects\\StockQuote1\\app\\src\\main\\res\\drawable-hdpi\\ic_menu_info_details.png"
+    },
+    {
+        "merged": "D:\\projects\\StockQuote1\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi\\ic_launcher.png",
+        "source": "D:\\projects\\StockQuote1\\app\\src\\main\\res\\drawable-hdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "D:\\projects\\StockQuote1\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi\\ic_menu_manage.png",
+        "source": "D:\\projects\\StockQuote1\\app\\src\\main\\res\\drawable-hdpi\\ic_menu_manage.png"
+    },
+    {
+        "merged": "D:\\projects\\StockQuote1\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi\\ic_menu_close_clear_cancel.png",
+        "source": "D:\\projects\\StockQuote1\\app\\src\\main\\res\\drawable-hdpi\\ic_menu_close_clear_cancel.png"
+    },
+    {
+        "merged": "D:\\projects\\StockQuote1\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi\\ic_menu_refresh.png",
+        "source": "D:\\projects\\StockQuote1\\app\\src\\main\\res\\drawable-hdpi\\ic_menu_refresh.png"
+    },
+    {
+        "merged": "D:\\projects\\StockQuote1\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi\\ic_menu_search.png",
+        "source": "D:\\projects\\StockQuote1\\app\\src\\main\\res\\drawable-hdpi\\ic_menu_search.png"
+    }
+]
