@@ -369,7 +369,7 @@ public class MainListActivity extends ListActivity implements SearchDialogListen
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.about:
-			Toast.makeText(this, "Version R1.4", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, R.string.Revision, Toast.LENGTH_SHORT).show();
 			return true;
 		case R.id.refresh:
 			getSGXData(this, CurrentOption, null, true);

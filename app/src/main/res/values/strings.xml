@@ -29,4 +29,6 @@
     
     <string name="No_internet_connection">No internet connection is available.</string>
 
+    <string name="Revision">R1.4</string>
+
 </resources>
