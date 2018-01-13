@@ -39,6 +39,8 @@ import android.widget.Toast;
 public class MainListActivity extends ListActivity implements SearchDialogListener {
 
 	static final String URL_SGX = "http://www.sgx.com/JsonRead/JsonData";
+	static final String URL_SGX_ALL_STOCKS = "http://www.sgx.com/JsonRead/JsonstData";
+
 	static final byte WATCHLIST_SIZE = 3;
 
 	private static HashMap<String, WatchList> watchLists = new HashMap<String, WatchList>(WATCHLIST_SIZE);
@@ -84,23 +86,35 @@ public class MainListActivity extends ListActivity implements SearchDialogListen
 
 	}
 
+	protected void onPause() {
+
+		DoPersist();
+
+		Log.d("", "Paused but persisted");
+		super.onPause();
+	}
+
 	@Override
 	protected void onDestroy() {
 
+		DoPersist();
+
+		Log.d("", "Destroyed but persisted");
+		super.onDestroy();
+	}
+
+	public void DoPersist()
+	{
 		// Persist to store
 		FileStore store = new FileStore(this);
 		for (byte i = 1; i <= 3; i++) {
 			WatchList wl = watchLists.get(WatchList.getWatchListKey(i));
 			wl.persistWatchList(store, WatchList.getWatchListKey(i));
 		}
-		
+
 		// Persist responses to store
 		responseSTI.persistToStore(store, "STI");
 		responseAllStocks.persistToStore(store, "AllStocks");
-
-		Log.d("", "Destroyed but persisted");
-
-		super.onDestroy();
 	}
 
 	public String time = "";
@@ -211,7 +225,16 @@ public class MainListActivity extends ListActivity implements SearchDialogListen
 					{
 						// Execute http call
 						long startTime = System.nanoTime();
-						String responseString = Util.executeRequest(Util.RequestMethod.GET, URL_SGX, _option);
+
+						//STI and ALl stocks uses different URL - 20180110
+						String url = URL_SGX;
+
+						if (_option.equals(QuoteOption.ALL_STOCK)) {
+							//e.g http://sgx.com/JsonRead/JsonstData?qryId=RALL&timeout=60&%20noCache=1515682224702.73134.86463884322
+							url = URL_SGX_ALL_STOCKS;
+						}
+
+						String responseString = Util.executeRequest(Util.RequestMethod.GET, url, _option);
 						long endTime = System.nanoTime();
 						long duration = endTime - startTime;
 						time = "Time taken: " + String.valueOf(duration / 1000000);
@@ -346,7 +369,7 @@ public class MainListActivity extends ListActivity implements SearchDialogListen
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.about:
-			Toast.makeText(this, "Version 1.1", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Version R1.4", Toast.LENGTH_SHORT).show();
 			return true;
 		case R.id.refresh:
 			getSGXData(this, CurrentOption, null, true);
